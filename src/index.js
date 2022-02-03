@@ -14,12 +14,32 @@ server.listen(serverPort, () => {
 });
 
 server.get('/movies', (req, res) => {
-  const response = {
+
+  // const response = {
+  //   success: true,
+  //   movies: movies,
+  // };
+  // const filterGender = response.movies.filter(
+  //   (movie) => movie.gender === req.query.gender
+  // );
+  // res.json(filterGender);
+  console.log(req.query);
+  const genderFilterParam= movies.filter((movie)=> movie.gender === req.query.gender)
+  res.send({
     success: true,
-    movies: movies,
-  };
-  const filterGender = response.movies.filter(
-    (movie) => movie.gender === req.query.gender
-  );
-  res.json(filterGender);
+    movies:genderFilterParam
+  });
+
+ 
+ 
 });
+const staticServerPath= "./src/public";
+server.use(express.static(staticServerPath));
+
+const staticServerMoviesImage= "./src/public-movies-images";
+server.use(express.static(staticServerMoviesImage));
+
+
+server.post("/login", (req,res)=>{
+  const 
+})

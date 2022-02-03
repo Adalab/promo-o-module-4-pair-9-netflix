@@ -3,18 +3,18 @@
         "id": "1",
         "title": "Gambita de dama",
         "gender": "Drama",
-        "image": "https://via.placeholder.com/150"
+        "image": "/gambita-de-dama.jpg"
       },
       {
         "id": "2",
         "title": "Friends",
         "gender": "Comedia",
-        "image": "https://via.placeholder.com/150"
+        "image": "/friends.jpg"
       },
       {
         "id": "3",
         "title": "House",
         "gender": "Comedia",
-        "image": "https://via.placeholder.com/150"
+        "image": "http://localhost:4000/friends.jpg"
       }
 ]
