@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const movies = require('./data/movies.json');
-const users = require('./data/users.json');
+const Database = require('better-sqlite3');
+const db = Database('./src/db/database.db', { verbose: console.log });
 
 // create and config server
 const server = express();
@@ -16,6 +16,9 @@ server.listen(serverPort, () => {
 });
 
 server.get('/movies', (req, res) => {
+  const query = db.prepare('SELECT * FROM movies ORDER BY name');
+  const movies = query.all();
+
   const genderFilterParam = req.query.gender;
   const filterdMovies = movies.filter((movie) => {
     if (genderFilterParam === '') {
@@ -32,8 +35,10 @@ server.get('/movies', (req, res) => {
 });
 
 server.get('/movie/:movieId', (req, res) => {
-  const foundMovie = movies.find((movie) => movie.id === req.params.movieId);
-  console.log(foundMovie);
+  const query = db.prepare('SELECT * FROM movies WHERE id = ?');
+  const foundMovie = query.get(req.params.movieId);
+  // Sin BBDD
+  // const foundMovie = movies.find((movie) => movie.id === req.params.movieId);
   res.render('movie', foundMovie);
 });
 
@@ -49,12 +54,16 @@ server.use(express.static(staticServerMoviesStyle));
 
 // Creamos nuestros endpoint
 server.post('/login', (req, res) => {
-  console.log(req.body);
-  const emailLogin = req.body.email;
-  const passwordLogin = req.body.password;
-  const foundUser = users.find(
-    (user) => user.password === passwordLogin && user.email === emailLogin
+  const query = db.prepare(
+    'SELECT * FROM users WHERE email = ? AND password = ?'
   );
+  const foundUser = query.get(req.body.email, req.body.password);
+  // Antes de BBDD
+  // const emailLogin = req.body.email;
+  // const passwordLogin = req.body.password;
+  // const foundUser = users.find(
+  //   (user) => user.password === passwordLogin && user.email === emailLogin
+  // );
   if (foundUser) {
     res.json({
       success: true,
