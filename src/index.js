@@ -16,10 +16,13 @@ server.listen(serverPort, () => {
 });
 
 server.get('/movies', (req, res) => {
-  const query = db.prepare('SELECT * FROM movies ORDER BY name');
+  const query = db.prepare(
+    `SELECT * FROM movies ORDER BY name ${req.query.sort}`
+  );
   const movies = query.all();
 
   const genderFilterParam = req.query.gender;
+
   const filterdMovies = movies.filter((movie) => {
     if (genderFilterParam === '') {
       return movie;
