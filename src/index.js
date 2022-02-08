@@ -46,7 +46,7 @@ server.get('/movie/:movieId', (req, res) => {
 });
 
 //Aqui ponemos los ficheros estáticos
-const staticServerPath = './src/public';
+const staticServerPath = './src/public-react';
 server.use(express.static(staticServerPath));
 
 const staticServerMoviesImage = './src/public-movies-images';
@@ -76,6 +76,29 @@ server.post('/login', (req, res) => {
     res.json({
       success: false,
       errorMessage: 'Usuario no encontrado',
+    });
+  }
+});
+
+server.post('/sign-up', (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  const querySelect = db.prepare('SELECT * FROM users WHERE email = ?');
+  const foundUser = querySelect.get(email);
+  if (foundUser === undefined) {
+    const query = db.prepare(
+      'INSERT INTO users (email, password) VALUES (?, ?)'
+    );
+    const userInsert = query.run(email, password);
+    res.json({
+      success: true,
+      userId: userInsert.lastInsertRowid,
+    });
+  } else {
+    res.json({
+      success: false,
+      errorMessage: 'Usuaria ya existente',
     });
   }
 });
